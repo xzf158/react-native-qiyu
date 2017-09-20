@@ -9,7 +9,7 @@
 #import "RCTQiYu.h"
 #import "QYSDK.h"
 #import "RCTConvert.h"
-#import "RCTBridge.h"
+// #import "RCTBridge.h" 其他framework有此定义，重复了，项目需要
 #import "RCTEventDispatcher.h"
 
 
@@ -79,7 +79,7 @@ RCT_EXPORT_METHOD(setCustomUIConfig:(NSDictionary*)paramDict) {
     }
     [[QYSDK sharedSDK] customUIConfig].sessionMessageSpacing = [RCTConvert CGFloat:[paramDict objectForKey:@"sessionMessageSpacing"]];
     [[QYSDK sharedSDK] customUIConfig].showHeadImage = [RCTConvert BOOL:[paramDict objectForKey:@"showHeadImage"]];
-//    [[QYSDK sharedSDK] customUIConfig].rightBarButtonItemColorBlackOrWhite = [RCTConvert BOOL:[paramDict objectForKey:@"naviBarStyleDark"]];
+    //    [[QYSDK sharedSDK] customUIConfig].rightBarButtonItemColorBlackOrWhite = [RCTConvert BOOL:[paramDict objectForKey:@"naviBarStyleDark"]];
     [[QYSDK sharedSDK] customUIConfig].showAudioEntry = [RCTConvert BOOL:[paramDict objectForKey:@"showAudioEntry"]];
     [[QYSDK sharedSDK] customUIConfig].showEmoticonEntry = [RCTConvert BOOL:[paramDict objectForKey:@"showEmoticonEntry"]];
     [[QYSDK sharedSDK] customUIConfig].autoShowKeyboard = [RCTConvert BOOL:[paramDict objectForKey:@"autoShowKeyboard"]];
@@ -143,16 +143,24 @@ RCT_EXPORT_METHOD(openServiceWindow:(NSDictionary*)paramDict){
     sessionVC.sessionTitle = [RCTConvert NSString:[paramDict objectForKey:@"sessionTitle"]];
     sessionVC.groupId = [RCTConvert int64_t:[paramDict objectForKey:@"groupId"]];
     sessionVC.staffId = [RCTConvert int64_t:[paramDict objectForKey:@"staffId"]];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:0.1f target:self selector:@selector(delayMethod:) userInfo:sessionVC repeats:NO];
+    
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     if (source) {
         sessionVC.source = source;
     }
     if (commodityInfo) {
         sessionVC.commodityInfo = commodityInfo;
     }
-    sessionVC.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStyleBordered target:self action:@selector(back:)];
+    
     sessionVC.hidesBottomBarWhenPushed = YES;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sessionVC];
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)delayMethod:(NSTimer *)timer {
+    QYSessionViewController *sessionVC = (QYSessionViewController *)[timer userInfo];
+    sessionVC.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
 }
 
 - (void)back:(id)sender {
