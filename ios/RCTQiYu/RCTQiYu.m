@@ -9,7 +9,6 @@
 #import "RCTQiYu.h"
 #import "QYSDK.h"
 #import "RCTConvert.h"
-// #import "RCTBridge.h" 其他framework有此定义，重复了，项目需要
 #import "RCTEventDispatcher.h"
 
 
