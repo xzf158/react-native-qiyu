@@ -34,7 +34,6 @@ public class QiyuSdkPackage implements ReactPackage {
         return Collections.emptyList();
     }
 
-    @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Collections.emptyList();
     }
